@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar System with Properly Aligned Planets</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        background: radial-gradient(circle at center, rgba(0, 0, 10, 0.8), rgba(0, 0, 0, 1)), #000;
+        font-family: Arial, sans-serif;
+        color: white;
+    }
+
+    /* Center (Sun) */
+    .center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 60px;
+        height: 60px;
+        background: yellow;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 30px yellow;
+        z-index: 100;
+    }
+
+    /* Planet Container */
+    .planet-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        transform: translate(-50%, -50%);
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    /* Planets */
+    .planet {
+        position: absolute;
+        top: 50%;
+        transform-origin: center;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0, 0, 255, 0.7);
+    }
+
+    /* Colors and sizes for different planets */
+    .planet.mercury {
+        background: radial-gradient(circle, rgba(169, 169, 169, 0.9), rgba(105, 105, 105, 0.9)); /* Mercury */
+        width: 20px;
+        height: 20px;
+        animation: rotatePlanet 10s infinite linear;
+    }
+
+    .planet.venus {
+        background: radial-gradient(circle, rgba(255, 223, 186, 0.9), rgba(210, 180, 140, 0.9)); /* Venus */
+        width: 30px;
+        height: 30px;
+        animation: rotatePlanet 15s infinite linear;
+    }
+
+    .planet.earth {
+        background: radial-gradient(circle, rgba(52, 152, 219, 1), rgba(0, 0, 139, 1)); /* Earth */
+        width: 40px;
+        height: 40px;
+        animation: rotatePlanet 20s infinite linear;
+    }
+
+    .planet.mars {
+        background: radial-gradient(circle, rgba(173, 216, 230, 0.8), rgba(70, 130, 180, 0.9)); /* Mars */
+        width: 25px;
+        height: 25px;
+        animation: rotatePlanet 25s infinite linear;
+    }
+
+    .planet.jupiter {
+        background: radial-gradient(circle, rgba(240, 230, 140, 0.9), rgba(189, 183, 107, 0.9)); /* Jupiter */
+        width: 60px;
+        height: 60px;
+        animation: rotatePlanet 30s infinite linear;
+    }
+
+    .planet.saturn {
+        background: radial-gradient(circle, rgba(255, 239, 213, 0.9), rgba(255, 215, 0, 0.9)); /* Saturn */
+        width: 50px;
+        height: 50px;
+        animation: rotatePlanet 35s infinite linear;
+    }
+
+    /* Planet Names */
+    .planet-name {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        color: white;
+        text-align: center;
+    }
+
+    /* Stars */
+    .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: white;
+        border-radius: 50%;
+        animation: twinkle 1.5s infinite alternate ease-in-out;
+        z-index: 0;
+    }
+
+    /* Animations */
+    @keyframes rotatePlanet {
+        0% { transform: rotate(0deg) translateX(var(--distance)) rotate(0deg); }
+        100% { transform: rotate(360deg) translateX(var(--distance)) rotate(-360deg); }
+    }
+
+    @keyframes twinkle {
+        0% { opacity: 0.6; }
+        100% { opacity: 1; }
+    }
+</style>
+</head>
+<body>
+    <!-- Center (Sun) -->
+    <div class="center"></div>
+
+    <!-- Planet Container -->
+    <div class="planet-container">
+        <!-- Planets with Names -->
+        <div class="planet mercury" style="--distance: 100px;">
+            <div class="planet-name">Mercury</div>
+        </div>
+        <div class="planet venus" style="--distance: 150px;">
+            <div class="planet-name">Venus</div>
+        </div>
+        <div class="planet earth" style="--distance: 200px;">
+            <div class="planet-name">Earth</div>
+        </div>
+        <div class="planet mars" style="--distance: 250px;">
+            <div class="planet-name">Mars</div>
+        </div>
+        <div class="planet jupiter" style="--distance: 350px;">
+            <div class="planet-name">Jupiter</div>
+        </div>
+        <div class="planet saturn" style="--distance: 450px;">
+            <div class="planet-name">Saturn</div>
+        </div>
+    </div>
+
+<script>
+    // Generate twinkling stars
+    for (let i = 0; i < 150; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        document.body.appendChild(star);
+    }
+</script>
+</body>
+</html>
