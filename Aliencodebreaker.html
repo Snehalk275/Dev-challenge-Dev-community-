@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Alien Code Breaker</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            color: #00ff00;
+            background: linear-gradient(to bottom, #000033, #000066);
+        }
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+        #gameContainer {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        #codeDisplay {
+            font-size: 36px;
+            margin: 20px 0;
+            letter-spacing: 10px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        #guessInput {
+            font-size: 24px;
+            width: 200px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+        }
+        button {
+            font-size: 18px;
+            background: #006600;
+            color: #00ff00;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #008800;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        #message {
+            font-size: 18px;
+            margin-top: 20px;
+            min-height: 50px;
+        }
+        #attemptsLeft {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .attempt-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin: 0 5px;
+            background-color: #00ff00;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        .attempt-icon.used {
+            background-color: #ff0000;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .pulse {
+            animation: pulse 0.5s;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="starfield"></div>
+    <div id="gameContainer">
+        <h1>Alien Code Breaker</h1>
+        <div id="codeDisplay">????</div>
+        <input type="text" id="guessInput" maxlength="4" placeholder="Enter 4-digit code">
+        <button onclick="checkGuess()">Submit Guess</button>
+        <div id="message"></div>
+        <div id="attemptsLeft"></div>
+    </div>
+
+    <script>
+        let secretCode;
+        let attempts;
+        const maxAttempts = 5;
+
+        // Starfield background
+        function createStarfield() {
+            const starfield = document.getElementById('starfield');
+            const numberOfStars = 200;
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = star.style.height = Math.random() * 3 + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDuration = Math.random() * 3 + 2 + 's';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                starfield.appendChild(star);
+            }
+        }
+
+        function generateSecretCode() {
+            return Math.floor(1000 + Math.random() * 9000).toString();
+        }
+
+        function startNewGame() {
+            secretCode = generateSecretCode();
+            attempts = 0;
+            updateAttemptsDisplay();
+            document.getElementById('codeDisplay').textContent = '????';
+            document.getElementById('message').textContent = '';
+            document.getElementById('guessInput').value = '';
+            document.getElementById('codeDisplay').classList.add('pulse');
+            setTimeout(() => document.getElementById('codeDisplay').classList.remove('pulse'), 500);
+        }
+
+        function updateAttemptsDisplay() {
+            const attemptsDiv = document.getElementById('attemptsLeft');
+            attemptsDiv.innerHTML = 'Attempts: ';
+            for (let i = 0; i < maxAttempts; i++) {
+                attemptsDiv.innerHTML += `<span class="attempt-icon ${i < attempts ? 'used' : ''}"></span>`;
+            }
+        }
+
+        function checkGuess() {
+            const guess = document.getElementById('guessInput').value;
+            if (guess.length !== 4 || isNaN(guess)) {
+                document.getElementById('message').textContent = 'Please enter a valid 4-digit number.';
+                return;
+            }
+
+            attempts++;
+            updateAttemptsDisplay();
+
+            let correctDigits = 0;
+            let correctPositions = 0;
+
+            for (let i = 0; i < 4; i++) {
+                if (guess[i] === secretCode[i]) {
+                    correctPositions++;
+                } else if (secretCode.includes(guess[i])) {
+                    correctDigits++;
+                }
+            }
+
+            if (correctPositions === 4) {
+                document.getElementById('message').textContent = 'Congratulations! You cracked the alien code!';
+                document.getElementById('codeDisplay').textContent = secretCode;
+                document.getElementById('codeDisplay').style.color = '#00ff00';
+                document.getElementById('codeDisplay').classList.add('pulse');
+                return;
+            }
+
+            if (attempts >= maxAttempts) {
+                document.getElementById('message').textContent = `Game over! The correct code was ${secretCode}.`;
+                document.getElementById('codeDisplay').textContent = secretCode;
+                document.getElementById('codeDisplay').style.color = '#ff0000';
+                document.getElementById('codeDisplay').classList.add('pulse');
+                return;
+            }
+
+            document.getElementById('message').textContent = `${correctPositions} correct position(s), ${correctDigits} correct digit(s) but wrong position.`;
+            document.getElementById('guessInput').value = '';
+        }
+
+        createStarfield();
+        startNewGame();
+    </script>
+</body>
+</html>
